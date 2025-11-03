@@ -116,6 +116,24 @@ const tienePalabrasComunes = (clave: string, commonPasswords: string[]): Validac
   }
 };
 
+const errorQueAparece = (nombreUsuario: string, clave: string, commonPasswords: string[])=> {
+ if (tieneMayusculasYMinusculas(clave).esValida === false) {
+  return "La clave debe contener al menos una letra mayúscula y una letra minúscula.";
+  } else if (tieneNumeros(clave).esValida === false) {
+    return "La clave debe contener al menos un número.";
+  } else if (tieneCaracteresEspeciales(clave).esValida === false) {
+    return "La clave debe contener al menos un carácter especial.";
+  } else if (tieneLongitudMinima(clave).esValida === false) {
+    return "La clave debe tener al menos 8 caracteres de longitud.";
+  } else if (tieneNombreUsuario(nombreUsuario, clave).esValida === false) {
+    return "La clave no debe contener el nombre de usuario.";
+  } else if (tienePalabrasComunes(clave, commonPasswords).esValida === false) {
+    return "La clave no debe ser una palabra común o fácil de adivinar.";
+  } else {
+    return "revisa este error, no debería aparecer";
+  }
+}
+
 const validarClave = (nombreUsuario: string, clave: string, commonPasswords: string[]): ValidacionClave => {
   tieneMayusculasYMinusculas(clave);
   tieneNumeros(clave);
@@ -134,11 +152,11 @@ const validarClave = (nombreUsuario: string, clave: string, commonPasswords: str
   ) {
     return { esValida: true };
   } else {
-    return { esValida: false };
+    return { esValida: false, error: errorQueAparece(nombreUsuario, clave, commonPasswords)};
   }
 
 };
 
-const clave = "UsuarioEjemplo1!";
+const clave = "ikerN1.8967";
 
-console.log(validarClave("Iker", clave, commonPasswords));
+console.log(validarClave("ikerN1.8967", clave, commonPasswords));
