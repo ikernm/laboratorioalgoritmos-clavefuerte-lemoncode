@@ -62,7 +62,7 @@ const tieneMayusculasYMinusculas = (clave: string): ValidacionClave => {
   if (tieneMayuscula && tieneMinuscula) {
     return { esValida: true };
   } else {
-    return { esValida: false }
+    return { esValida: false, error: "La clave debe contener al menos una letra mayúscula y una letra minúscula" };
   }
 };
 
@@ -72,7 +72,7 @@ const tieneNumeros = (clave: string): ValidacionClave => {
   if (tieneNumeros) {
     return { esValida: true };
   } else {
-    return { esValida: false }
+    return { esValida: false, error: "La clave debe contener al menos un número." };
   }
 };
 
@@ -82,7 +82,7 @@ const tieneCaracteresEspeciales = (clave: string): ValidacionClave => {
   if (tieneCaracteresEspeciales) {
     return { esValida: true };
   } else {
-    return { esValida: false }
+    return { esValida: false, error: "La clave debe contener al menos un carácter especial."};
   }
 };
 
@@ -92,7 +92,7 @@ const tieneLongitudMinima = (clave: string): ValidacionClave => {
   if (clave.length >= longitudMinima) {
     return { esValida: true };
   } else {
-    return { esValida: false }
+    return { esValida: false, error: "La clave debe tener al menos 8 caracteres de longitud." };
   }
 };
 
@@ -100,7 +100,7 @@ const tieneNombreUsuario = (nombreUsuario: string, clave: string): ValidacionCla
   const contieneNombreUsuario = clave.toLowerCase().includes(nombreUsuario.toLowerCase());
   
   if (contieneNombreUsuario) {
-    return { esValida: false };
+    return { esValida: false, error: "La clave no debe contener el nombre de usuario." };
   } else {
     return { esValida: true }
   }
@@ -110,29 +110,11 @@ const tienePalabrasComunes = (clave: string, commonPasswords: string[]): Validac
   const esComun = commonPasswords.includes(clave);
 
   if (esComun) {
-    return { esValida: false };
+    return { esValida: false, error: "La clave no debe ser una palabra común o fácil de adivinar." };
   } else {
     return { esValida: true }
   }
 };
-
-const errorQueAparece = (nombreUsuario: string, clave: string, commonPasswords: string[])=> {
- if (tieneMayusculasYMinusculas(clave).esValida === false) {
-  return "La clave debe contener al menos una letra mayúscula y una letra minúscula.";
-  } else if (tieneNumeros(clave).esValida === false) {
-    return "La clave debe contener al menos un número.";
-  } else if (tieneCaracteresEspeciales(clave).esValida === false) {
-    return "La clave debe contener al menos un carácter especial.";
-  } else if (tieneLongitudMinima(clave).esValida === false) {
-    return "La clave debe tener al menos 8 caracteres de longitud.";
-  } else if (tieneNombreUsuario(nombreUsuario, clave).esValida === false) {
-    return "La clave no debe contener el nombre de usuario.";
-  } else if (tienePalabrasComunes(clave, commonPasswords).esValida === false) {
-    return "La clave no debe ser una palabra común o fácil de adivinar.";
-  } else {
-    return "revisa este error, no debería aparecer";
-  }
-}
 
 const validarClave = (nombreUsuario: string, clave: string, commonPasswords: string[]): ValidacionClave => {
   tieneMayusculasYMinusculas(clave);
@@ -152,11 +134,19 @@ const validarClave = (nombreUsuario: string, clave: string, commonPasswords: str
   ) {
     return { esValida: true };
   } else {
-    return { esValida: false, error: errorQueAparece(nombreUsuario, clave, commonPasswords)};
+    return { esValida: false, error: 
+      `${tieneMayusculasYMinusculas(clave).error || ""} 
+      ${tieneNumeros(clave).error || ""} 
+      ${tieneCaracteresEspeciales(clave).error || ""} 
+      ${tieneLongitudMinima(clave).error || ""} 
+      ${tieneNombreUsuario(nombreUsuario, clave).error || ""} 
+      ${tienePalabrasComunes(clave, commonPasswords).error || ""}`.trim()};
   }
 
 };
 
 const clave = "ikerN1.8967";
 
-console.log(validarClave("ikerN1.8967", clave, commonPasswords));
+console.log(
+  validarClave("ikerN1.8967", clave, commonPasswords)
+);
