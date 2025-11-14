@@ -142,7 +142,6 @@ const validarClave = (nombreUsuario: string, clave: string, commonPasswords: str
       ${tieneNombreUsuario(nombreUsuario, clave).error || ""} 
       ${tienePalabrasComunes(clave, commonPasswords).error || ""}`.trim()};
   }
-
 };
 
 const clave = "ikerN1.8967";
